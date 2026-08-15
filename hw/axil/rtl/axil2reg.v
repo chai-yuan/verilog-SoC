@@ -129,7 +129,7 @@ module axil2reg #(
                     state <= ST_IDLE;
                 end
             end
-
+x
             default: state <= ST_IDLE;
             endcase
         end
