@@ -2541,7 +2541,7 @@ module picorv32_axi #(
 	parameter [31:0] PROGADDR_IRQ = 32'h 0000_0010,
 	parameter [31:0] STACKADDR = 32'h ffff_ffff
 ) (
-	input clk, resetn,
+	input clk, reset,
 	output trap,
 
 	// AXI4-lite master memory interface
@@ -2558,6 +2558,7 @@ module picorv32_axi #(
 
 	input         mem_axi_bvalid,
 	output        mem_axi_bready,
+	input  [ 1:0] mem_axi_bresp,
 
 	output        mem_axi_arvalid,
 	input         mem_axi_arready,
@@ -2567,6 +2568,7 @@ module picorv32_axi #(
 	input         mem_axi_rvalid,
 	output        mem_axi_rready,
 	input  [31:0] mem_axi_rdata,
+	input  [ 1:0] mem_axi_rresp,
 
 	// Pico Co-Processor Interface (PCPI)
 	output        pcpi_valid,
@@ -2615,6 +2617,7 @@ module picorv32_axi #(
 	wire        mem_instr;
 	wire        mem_ready;
 	wire [31:0] mem_rdata;
+	wire resetn = !reset;
 
 	picorv32_axi_adapter axi_adapter (
 		.clk            (clk            ),

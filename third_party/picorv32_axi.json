@@ -112,7 +112,7 @@
     "CLOCK_RESET": {
       "type": "clock_reset",
       "mode": "slave",
-      "description": "System clock and active-low reset."
+      "description": "System clock and active-high reset."
     },
     "M_AXIL": {
       "type": "axil",
@@ -122,7 +122,7 @@
   },
   "ports": {
     "clk": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "clock" },
-    "resetn": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "reset" },
+    "reset": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "reset" },
 
     "mem_axi_awvalid": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "AWVALID" },
     "mem_axi_awready": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "AWREADY" },
@@ -134,6 +134,7 @@
     "mem_axi_wstrb": { "direction": "output", "width": "4", "interface": "M_AXIL", "role": "WSTRB" },
     "mem_axi_bvalid": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "BVALID" },
     "mem_axi_bready": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "BREADY" },
+    "mem_axi_bresp": { "direction": "input", "width": "2", "interface": "M_AXIL", "role": "BRESP" },
     "mem_axi_arvalid": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "ARVALID" },
     "mem_axi_arready": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "ARREADY" },
     "mem_axi_araddr": { "direction": "output", "width": "32", "interface": "M_AXIL", "role": "ARADDR" },
@@ -141,6 +142,7 @@
     "mem_axi_rvalid": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "RVALID" },
     "mem_axi_rready": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "RREADY" },
     "mem_axi_rdata": { "direction": "input", "width": "32", "interface": "M_AXIL", "role": "RDATA" },
+    "mem_axi_rresp": { "direction": "input", "width": "2", "interface": "M_AXIL", "role": "RRESP" },
 
     "trap": {
       "direction": "output",
