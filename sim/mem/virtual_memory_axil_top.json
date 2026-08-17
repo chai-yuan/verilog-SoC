@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "metadata": {
+    "name": "virtual_memory_axil_top",
+    "version": "1.0.0",
+    "author": "SoC project",
+    "description": "Virtual memory for simulation, exposed through an AXI4-Lite slave interface. Pairs an axil_bridge with a virtual_memory array."
+  },
+  "parameters": {
+    "ADDR_WIDTH": {
+      "default": "32",
+      "description": "Width of the AXI4-Lite address bus in bits."
+    },
+    "DATA_WIDTH": {
+      "default": "32",
+      "description": "Width of the AXI4-Lite data bus in bits."
+    },
+    "DEPTH": {
+      "default": "1024",
+      "description": "Number of memory locations."
+    },
+    "INIT_FILE": {
+      "default": "",
+      "description": "Optional hex file used to initialize memory contents."
+    }
+  },
+  "interfaces": {
+    "CLOCK_RESET": {
+      "type": "clock_reset",
+      "mode": "slave",
+      "description": "System clock and active-high reset."
+    },
+    "S_AXIL": {
+      "type": "axil",
+      "mode": "slave",
+      "description": "AXI4-Lite slave memory interface."
+    }
+  },
+  "ports": {
+    "clock": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "clock" },
+    "reset": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "reset" },
+
+    "s_axi_awvalid": { "direction": "input", "width": "1", "interface": "S_AXIL", "role": "AWVALID" },
+    "s_axi_awready": { "direction": "output", "width": "1", "interface": "S_AXIL", "role": "AWREADY" },
+    "s_axi_awaddr": { "direction": "input", "width": "ADDR_WIDTH", "interface": "S_AXIL", "role": "AWADDR" },
+    "s_axi_awprot": { "direction": "input", "width": "3", "interface": "S_AXIL", "role": "AWPROT" },
+    "s_axi_wvalid": { "direction": "input", "width": "1", "interface": "S_AXIL", "role": "WVALID" },
+    "s_axi_wready": { "direction": "output", "width": "1", "interface": "S_AXIL", "role": "WREADY" },
+    "s_axi_wdata": { "direction": "input", "width": "DATA_WIDTH", "interface": "S_AXIL", "role": "WDATA" },
+    "s_axi_wstrb": { "direction": "input", "width": "DATA_WIDTH/8", "interface": "S_AXIL", "role": "WSTRB" },
+    "s_axi_bvalid": { "direction": "output", "width": "1", "interface": "S_AXIL", "role": "BVALID" },
+    "s_axi_bready": { "direction": "input", "width": "1", "interface": "S_AXIL", "role": "BREADY" },
+    "s_axi_bresp": { "direction": "output", "width": "2", "interface": "S_AXIL", "role": "BRESP" },
+    "s_axi_arvalid": { "direction": "input", "width": "1", "interface": "S_AXIL", "role": "ARVALID" },
+    "s_axi_arready": { "direction": "output", "width": "1", "interface": "S_AXIL", "role": "ARREADY" },
+    "s_axi_araddr": { "direction": "input", "width": "ADDR_WIDTH", "interface": "S_AXIL", "role": "ARADDR" },
+    "s_axi_arprot": { "direction": "input", "width": "3", "interface": "S_AXIL", "role": "ARPROT" },
+    "s_axi_rvalid": { "direction": "output", "width": "1", "interface": "S_AXIL", "role": "RVALID" },
+    "s_axi_rready": { "direction": "input", "width": "1", "interface": "S_AXIL", "role": "RREADY" },
+    "s_axi_rdata": { "direction": "output", "width": "DATA_WIDTH", "interface": "S_AXIL", "role": "RDATA" },
+    "s_axi_rresp": { "direction": "output", "width": "2", "interface": "S_AXIL", "role": "RRESP" }
+  },
+  "files": {
+    "hdl": [
+      "sim/mem/virtual_memory_axil_top.v",
+      "sim/mem/virtual_memory.v"
+    ]
+  }
+}
