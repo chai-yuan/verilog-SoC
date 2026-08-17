@@ -19,9 +19,13 @@
       "default": "1024",
       "description": "Number of memory locations."
     },
+    "BASE_ADDR": {
+      "default": "32'h8000_0000",
+      "description": "Base byte address of the memory region."
+    },
     "INIT_FILE": {
-      "default": "",
-      "description": "Optional hex file used to initialize memory contents."
+      "default": "\"\"",
+      "description": "Optional binary file used to initialize memory contents."
     }
   },
   "interfaces": {

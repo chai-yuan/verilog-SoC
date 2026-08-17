@@ -39,7 +39,7 @@
     }
   },
   "ports": {
-    "clk": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "clock" },
+    "clock": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "clock" },
     "reset": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "reset" },
 
     "s_axi_awvalid": { "direction": "input", "width": "1", "interface": "S_AXIL", "role": "AWVALID" },

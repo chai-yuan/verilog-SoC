@@ -3,10 +3,11 @@
 `default_nettype none
 
 module virtual_memory_axil_top #(
-    parameter integer ADDR_WIDTH = 32,
-    parameter integer DATA_WIDTH = 32,
-    parameter integer DEPTH      = 1024,
-    parameter         INIT_FILE  = ""
+    parameter integer ADDR_WIDTH    = 32,
+    parameter integer DATA_WIDTH    = 32,
+    parameter integer DEPTH         = 1024,
+    parameter         BASE_ADDR     = 32'h8000_0000,
+    parameter         INIT_FILE     = ""
 ) (
     input wire clock,
     input wire reset,
@@ -41,10 +42,10 @@ module virtual_memory_axil_top #(
     wire [    DATA_WIDTH-1:0] memory_rdata;
     wire                      memory_error;
 
-    axil_bridge #(
+    axil2reg #(
         .ADDR_WIDTH(ADDR_WIDTH),
         .DATA_WIDTH(DATA_WIDTH)
-    ) u_axil_bridge (
+    ) u_axil2reg (
         .clock(clock),
         .reset(reset),
 
@@ -86,6 +87,7 @@ module virtual_memory_axil_top #(
         .ADDR_WIDTH(ADDR_WIDTH),
         .DATA_WIDTH(DATA_WIDTH),
         .DEPTH     (DEPTH),
+        .BASE_ADDR (BASE_ADDR),
         .INIT_FILE (INIT_FILE)
     ) u_memory (
         .clock(clock),

@@ -6,6 +6,7 @@ module virtual_memory #(
     parameter integer ADDR_WIDTH = 32,
     parameter integer DATA_WIDTH = 32,
     parameter integer DEPTH      = 1024,
+    parameter [ADDR_WIDTH-1:0] BASE_ADDR = 32'h8000_0000,
     parameter         INIT_FILE  = ""
 ) (
     input wire clock,
@@ -21,16 +22,16 @@ module virtual_memory #(
     output wire                      s_error
 );
 
-    localparam integer BYTE_LANES = DATA_WIDTH / 8;
+    localparam integer BYTE_LANES     = DATA_WIDTH / 8;
     localparam integer CAPACITY_BYTES = DEPTH * BYTE_LANES;
 
     reg [7:0] mem[0:CAPACITY_BYTES-1];
     reg [DATA_WIDTH-1:0] read_data;
 
-    wire [ADDR_WIDTH-1:0] word_addr = s_addr / BYTE_LANES;
-    wire [ADDR_WIDTH-1:0] byte_addr = word_addr * BYTE_LANES;
-    wire address_valid = word_addr < DEPTH;
-    wire write_fire = s_valid && s_ready && s_write && address_valid;
+    wire [ADDR_WIDTH-1:0] local_addr = s_addr - BASE_ADDR;
+    wire [ADDR_WIDTH-1:0] word_index = local_addr / BYTE_LANES;
+    wire [ADDR_WIDTH-1:0] byte_index = word_index * BYTE_LANES;
+    wire address_valid = s_addr >= BASE_ADDR && word_index < DEPTH;
 
     integer init_file_handle;
     integer init_bytes_read;
@@ -55,6 +56,10 @@ module virtual_memory #(
             $error("Error: DEPTH must be positive (instance %m)");
             $finish;
         end
+        if (BASE_ADDR % BYTE_LANES != 0) begin
+            $error("Error: BASE_ADDR must be aligned to DATA_WIDTH (instance %m)");
+            $finish;
+        end
 
         for (init_index = 0; init_index < CAPACITY_BYTES; init_index = init_index + 1) begin
             mem[init_index] = 8'h00;
@@ -67,6 +72,10 @@ module virtual_memory #(
             end
             init_bytes_read = $fread(mem, init_file_handle);
             $fclose(init_file_handle);
+            if (init_bytes_read == 0) begin
+                $error("Error: INIT_FILE '%s' is empty (instance %m)", INIT_FILE);
+                $finish;
+            end
         end
     end
 
@@ -79,20 +88,20 @@ module virtual_memory #(
         read_data = {DATA_WIDTH{1'b0}};
         if (s_valid && !s_write && address_valid) begin
             for (read_byte_index = 0; read_byte_index < BYTE_LANES; read_byte_index = read_byte_index + 1) begin
-                read_data[read_byte_index*8+:8] = mem[byte_addr+read_byte_index];
+                read_data[read_byte_index*8+:8] = mem[byte_index+read_byte_index];
             end
         end
     end
 
     always @(posedge clock) begin
-        if (!reset && write_fire) begin
+        if (!reset && s_valid && s_write && address_valid) begin
             for (
                 write_byte_index = 0;
                 write_byte_index < BYTE_LANES;
                 write_byte_index = write_byte_index + 1
             ) begin
                 if (s_wstrb[write_byte_index]) begin
-                    mem[byte_addr+write_byte_index] <= s_wdata[write_byte_index*8+:8];
+                    mem[byte_index+write_byte_index] <= s_wdata[write_byte_index*8+:8];
                 end
             end
         end
