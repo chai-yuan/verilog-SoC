@@ -1,4 +1,6 @@
+`resetall
 `timescale 1ns / 1ps
+`default_nettype none
 
 module uart_tx (
     input wire clock,
@@ -67,3 +69,5 @@ module uart_tx (
     end
 
 endmodule
+
+`resetall

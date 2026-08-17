@@ -1,4 +1,6 @@
+`resetall
 `timescale 1ns / 1ps
+`default_nettype none
 
 module gpio_axil_top #(
     parameter integer IO_NUM     = 8,
@@ -110,3 +112,5 @@ module gpio_axil_top #(
     );
 
 endmodule
+
+`resetall

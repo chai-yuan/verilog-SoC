@@ -1,16 +1,12 @@
 {
   "schema_version": "1.0",
   "metadata": {
-    "name": "gpio_axil_top",
+    "name": "uart_axil_top",
     "version": "1.0.0",
     "author": "verilog-SoC",
-    "description": "Memory-mapped GPIO controller with AXI4-Lite slave interface."
+    "description": "Memory-mapped UART controller with AXI4-Lite slave interface."
   },
   "parameters": {
-    "IO_NUM": {
-      "default": "8",
-      "description": "Number of GPIO pins."
-    },
     "ADDR_WIDTH": {
       "default": "32",
       "description": "AXI address bus width."
@@ -18,6 +14,18 @@
     "DATA_WIDTH": {
       "default": "32",
       "description": "AXI data bus width."
+    },
+    "TX_FIFO_DEPTH": {
+      "default": "16",
+      "description": "Transmit FIFO depth."
+    },
+    "RX_FIFO_DEPTH": {
+      "default": "16",
+      "description": "Receive FIFO depth."
+    },
+    "DEFAULT_PRESCALE": {
+      "default": "16'd50",
+      "description": "Default UART baud prescale value."
     }
   },
   "interfaces": {
@@ -30,12 +38,6 @@
       "type": "axil",
       "mode": "slave",
       "description": "Upstream AXI4-Lite connection."
-    },
-    "GPIO": {
-      "type": "gpio",
-      "mode": "master",
-      "count": "IO_NUM",
-      "description": "Per-pin GPIO endpoints."
     }
   },
   "ports": {
@@ -62,42 +64,28 @@
     "s_axi_rdata": { "direction": "output", "width": "DATA_WIDTH", "interface": "S_AXIL", "role": "RDATA" },
     "s_axi_rresp": { "direction": "output", "width": "2", "interface": "S_AXIL", "role": "RRESP" },
 
-    "gpio_i": {
-      "direction": "input",
-      "width": "1",
-      "count": "IO_NUM",
-      "interface": "GPIO",
-      "role": "INPUT",
-      "description": "GPIO input data."
-    },
-    "gpio_o": {
-      "direction": "output",
-      "width": "1",
-      "count": "IO_NUM",
-      "interface": "GPIO",
-      "role": "OUTPUT",
-      "description": "GPIO output data."
-    },
-    "gpio_oe": {
-      "direction": "output",
-      "width": "1",
-      "count": "IO_NUM",
-      "interface": "GPIO",
-      "role": "OUTPUT_ENABLE",
-      "description": "GPIO output enable."
-    },
-
     "interrupt": {
       "direction": "output",
       "width": "1",
-      "description": "GPIO interrupt output."
+      "description": "UART interrupt output."
+    },
+    "rx": {
+      "direction": "input",
+      "width": "1",
+      "description": "UART receive data."
+    },
+    "tx": {
+      "direction": "output",
+      "width": "1",
+      "description": "UART transmit data."
     }
   },
   "files": {
     "hdl": [
-      "hw/gpio/rtl/gpio_axil_top.v",
-      "hw/gpio/rtl/gpio_reg_top.v",
-      "hw/gpio/rtl/gpio.v"
+      "hw/uart/rtl/uart_axil_top.v",
+      "hw/uart/rtl/uart_reg_top.v",
+      "hw/uart/rtl/uart_rx.v",
+      "hw/uart/rtl/uart_tx.v"
     ]
   }
 }

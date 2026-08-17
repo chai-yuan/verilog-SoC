@@ -1,4 +1,6 @@
+`resetall
 `timescale 1ns / 1ps
+`default_nettype none
 
 module uart_axil_top #(
     parameter ADDR_WIDTH       = 32,
@@ -112,3 +114,5 @@ module uart_axil_top #(
     );
 
 endmodule
+
+`resetall

@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0",
+  "metadata": {
+    "name": "axil_crossbar",
+    "version": "1.0.0",
+    "author": "Alex Forencich",
+    "description": "AXI4-Lite crossbar with S_COUNT slave and M_COUNT master interfaces."
+  },
+  "parameters": {
+    "S_COUNT": {
+      "default": "4",
+      "description": "Number of AXI slave (input) interfaces."
+    },
+    "M_COUNT": {
+      "default": "4",
+      "description": "Number of AXI master (output) interfaces."
+    },
+    "DATA_WIDTH": {
+      "default": "32",
+      "description": "Width of data bus in bits."
+    },
+    "ADDR_WIDTH": {
+      "default": "32",
+      "description": "Width of address bus in bits."
+    },
+    "STRB_WIDTH": {
+      "default": "DATA_WIDTH/8",
+      "description": "Width of wstrb (width of data bus in words)."
+    },
+    "S_ACCEPT": {
+      "default": "{S_COUNT{32'd16}}",
+      "description": "Number of concurrent operations for each slave interface."
+    },
+    "M_REGIONS": {
+      "default": "1",
+      "description": "Number of address regions per master interface."
+    },
+    "M_BASE_ADDR": {
+      "default": "0",
+      "description": "Master interface base addresses."
+    },
+    "M_ADDR_WIDTH": {
+      "default": "{M_COUNT{{M_REGIONS{32'd24}}}}",
+      "description": "Master interface address widths."
+    },
+    "M_CONNECT_READ": {
+      "default": "{M_COUNT{{S_COUNT{1'b1}}}}",
+      "description": "Read connections between interfaces."
+    },
+    "M_CONNECT_WRITE": {
+      "default": "{M_COUNT{{S_COUNT{1'b1}}}}",
+      "description": "Write connections between interfaces."
+    },
+    "M_ISSUE": {
+      "default": "{M_COUNT{32'd16}}",
+      "description": "Number of concurrent operations for each master interface."
+    },
+    "M_SECURE": {
+      "default": "{M_COUNT{1'b0}}",
+      "description": "Secure master (fail operations based on awprot/arprot)."
+    },
+    "S_AW_REG_TYPE": {
+      "default": "{S_COUNT{2'd0}}",
+      "description": "Slave AW channel register type: 0 bypass, 1 buffer, 2 skid."
+    },
+    "S_W_REG_TYPE": {
+      "default": "{S_COUNT{2'd0}}",
+      "description": "Slave W channel register type: 0 bypass, 1 buffer, 2 skid."
+    },
+    "S_B_REG_TYPE": {
+      "default": "{S_COUNT{2'd1}}",
+      "description": "Slave B channel register type: 0 bypass, 1 buffer, 2 skid."
+    },
+    "S_AR_REG_TYPE": {
+      "default": "{S_COUNT{2'd0}}",
+      "description": "Slave AR channel register type: 0 bypass, 1 buffer, 2 skid."
+    },
+    "S_R_REG_TYPE": {
+      "default": "{S_COUNT{2'd2}}",
+      "description": "Slave R channel register type: 0 bypass, 1 buffer, 2 skid."
+    },
+    "M_AW_REG_TYPE": {
+      "default": "{M_COUNT{2'd1}}",
+      "description": "Master AW channel register type: 0 bypass, 1 buffer, 2 skid."
+    },
+    "M_W_REG_TYPE": {
+      "default": "{M_COUNT{2'd2}}",
+      "description": "Master W channel register type: 0 bypass, 1 buffer, 2 skid."
+    },
+    "M_B_REG_TYPE": {
+      "default": "{M_COUNT{2'd0}}",
+      "description": "Master B channel register type: 0 bypass, 1 buffer, 2 skid."
+    },
+    "M_AR_REG_TYPE": {
+      "default": "{M_COUNT{2'd1}}",
+      "description": "Master AR channel register type: 0 bypass, 1 buffer, 2 skid."
+    },
+    "M_R_REG_TYPE": {
+      "default": "{M_COUNT{2'd0}}",
+      "description": "Master R channel register type: 0 bypass, 1 buffer, 2 skid."
+    }
+  },
+  "interfaces": {
+    "CLOCK_RESET": {
+      "type": "clock_reset",
+      "mode": "slave",
+      "description": "System clock and active-high reset."
+    },
+    "S_AXIL": {
+      "type": "axil",
+      "mode": "slave",
+      "count": "S_COUNT",
+      "description": "Downstream AXI4-Lite connections from initiators."
+    },
+    "M_AXIL": {
+      "type": "axil",
+      "mode": "master",
+      "count": "M_COUNT",
+      "description": "Upstream AXI4-Lite connections to targets."
+    }
+  },
+  "ports": {
+    "clk": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "clock" },
+    "rst": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "reset" },
+
+    "s_axil_awvalid": { "direction": "input", "width": "1", "count": "S_COUNT", "interface": "S_AXIL", "role": "AWVALID" },
+    "s_axil_awready": { "direction": "output", "width": "1", "count": "S_COUNT", "interface": "S_AXIL", "role": "AWREADY" },
+    "s_axil_awaddr": { "direction": "input", "width": "ADDR_WIDTH", "count": "S_COUNT", "interface": "S_AXIL", "role": "AWADDR" },
+    "s_axil_awprot": { "direction": "input", "width": "3", "count": "S_COUNT", "interface": "S_AXIL", "role": "AWPROT" },
+    "s_axil_wvalid": { "direction": "input", "width": "1", "count": "S_COUNT", "interface": "S_AXIL", "role": "WVALID" },
+    "s_axil_wready": { "direction": "output", "width": "1", "count": "S_COUNT", "interface": "S_AXIL", "role": "WREADY" },
+    "s_axil_wdata": { "direction": "input", "width": "DATA_WIDTH", "count": "S_COUNT", "interface": "S_AXIL", "role": "WDATA" },
+    "s_axil_wstrb": { "direction": "input", "width": "STRB_WIDTH", "count": "S_COUNT", "interface": "S_AXIL", "role": "WSTRB" },
+    "s_axil_bvalid": { "direction": "output", "width": "1", "count": "S_COUNT", "interface": "S_AXIL", "role": "BVALID" },
+    "s_axil_bready": { "direction": "input", "width": "1", "count": "S_COUNT", "interface": "S_AXIL", "role": "BREADY" },
+    "s_axil_bresp": { "direction": "output", "width": "2", "count": "S_COUNT", "interface": "S_AXIL", "role": "BRESP" },
+    "s_axil_arvalid": { "direction": "input", "width": "1", "count": "S_COUNT", "interface": "S_AXIL", "role": "ARVALID" },
+    "s_axil_arready": { "direction": "output", "width": "1", "count": "S_COUNT", "interface": "S_AXIL", "role": "ARREADY" },
+    "s_axil_araddr": { "direction": "input", "width": "ADDR_WIDTH", "count": "S_COUNT", "interface": "S_AXIL", "role": "ARADDR" },
+    "s_axil_arprot": { "direction": "input", "width": "3", "count": "S_COUNT", "interface": "S_AXIL", "role": "ARPROT" },
+    "s_axil_rvalid": { "direction": "output", "width": "1", "count": "S_COUNT", "interface": "S_AXIL", "role": "RVALID" },
+    "s_axil_rready": { "direction": "input", "width": "1", "count": "S_COUNT", "interface": "S_AXIL", "role": "RREADY" },
+    "s_axil_rdata": { "direction": "output", "width": "DATA_WIDTH", "count": "S_COUNT", "interface": "S_AXIL", "role": "RDATA" },
+    "s_axil_rresp": { "direction": "output", "width": "2", "count": "S_COUNT", "interface": "S_AXIL", "role": "RRESP" },
+
+    "m_axil_awvalid": { "direction": "output", "width": "1", "count": "M_COUNT", "interface": "M_AXIL", "role": "AWVALID" },
+    "m_axil_awready": { "direction": "input", "width": "1", "count": "M_COUNT", "interface": "M_AXIL", "role": "AWREADY" },
+    "m_axil_awaddr": { "direction": "output", "width": "ADDR_WIDTH", "count": "M_COUNT", "interface": "M_AXIL", "role": "AWADDR" },
+    "m_axil_awprot": { "direction": "output", "width": "3", "count": "M_COUNT", "interface": "M_AXIL", "role": "AWPROT" },
+    "m_axil_wvalid": { "direction": "output", "width": "1", "count": "M_COUNT", "interface": "M_AXIL", "role": "WVALID" },
+    "m_axil_wready": { "direction": "input", "width": "1", "count": "M_COUNT", "interface": "M_AXIL", "role": "WREADY" },
+    "m_axil_wdata": { "direction": "output", "width": "DATA_WIDTH", "count": "M_COUNT", "interface": "M_AXIL", "role": "WDATA" },
+    "m_axil_wstrb": { "direction": "output", "width": "STRB_WIDTH", "count": "M_COUNT", "interface": "M_AXIL", "role": "WSTRB" },
+    "m_axil_bvalid": { "direction": "input", "width": "1", "count": "M_COUNT", "interface": "M_AXIL", "role": "BVALID" },
+    "m_axil_bready": { "direction": "output", "width": "1", "count": "M_COUNT", "interface": "M_AXIL", "role": "BREADY" },
+    "m_axil_bresp": { "direction": "input", "width": "2", "count": "M_COUNT", "interface": "M_AXIL", "role": "BRESP" },
+    "m_axil_arvalid": { "direction": "output", "width": "1", "count": "M_COUNT", "interface": "M_AXIL", "role": "ARVALID" },
+    "m_axil_arready": { "direction": "input", "width": "1", "count": "M_COUNT", "interface": "M_AXIL", "role": "ARREADY" },
+    "m_axil_araddr": { "direction": "output", "width": "ADDR_WIDTH", "count": "M_COUNT", "interface": "M_AXIL", "role": "ARADDR" },
+    "m_axil_arprot": { "direction": "output", "width": "3", "count": "M_COUNT", "interface": "M_AXIL", "role": "ARPROT" },
+    "m_axil_rvalid": { "direction": "input", "width": "1", "count": "M_COUNT", "interface": "M_AXIL", "role": "RVALID" },
+    "m_axil_rready": { "direction": "output", "width": "1", "count": "M_COUNT", "interface": "M_AXIL", "role": "RREADY" },
+    "m_axil_rdata": { "direction": "input", "width": "DATA_WIDTH", "count": "M_COUNT", "interface": "M_AXIL", "role": "RDATA" },
+    "m_axil_rresp": { "direction": "input", "width": "2", "count": "M_COUNT", "interface": "M_AXIL", "role": "RRESP" }
+  },
+  "files": {
+    "hdl": [
+      "third_party/axil_crossbar/axil_crossbar.v",
+      "third_party/axil_crossbar/axil_crossbar_addr.v",
+      "third_party/axil_crossbar/axil_crossbar_rd.v",
+      "third_party/axil_crossbar/axil_crossbar_wr.v",
+      "third_party/axil_crossbar/axil_register_rd.v",
+      "third_party/axil_crossbar/axil_register_wr.v",
+      "third_party/axil_crossbar/arbiter.v",
+      "third_party/axil_crossbar/priority_encoder.v"
+    ]
+  }
+}

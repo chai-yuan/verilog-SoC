@@ -1,3 +1,7 @@
+`resetall
+`timescale 1ns / 1ps
+`default_nettype none
+
 module uart_reg_top #(
     parameter ADDR_WIDTH       = 32,     // 总线地址位宽
     parameter DATA_WIDTH       = 32,     // 总线读写数据位宽
@@ -224,3 +228,5 @@ module uart_reg_top #(
     assign rx_fifo_valid = rx_fifo_m_valid;
 
 endmodule
+
+`resetall

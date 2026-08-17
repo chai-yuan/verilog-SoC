@@ -1,0 +1,166 @@
+{
+  "schema_version": "1.0",
+  "metadata": {
+    "name": "picorv32_axi",
+    "version": "1.0.0",
+    "author": "Clifford Wolf",
+    "description": "PicoRV32 32-bit RISC-V core with AXI4-Lite master memory interface."
+  },
+  "parameters": {
+    "ENABLE_COUNTERS": {
+      "default": "1",
+      "description": "Enable performance counters."
+    },
+    "ENABLE_COUNTERS64": {
+      "default": "1",
+      "description": "Enable 64-bit performance counters."
+    },
+    "ENABLE_REGS_16_31": {
+      "default": "1",
+      "description": "Enable x16..x31 registers."
+    },
+    "ENABLE_REGS_DUALPORT": {
+      "default": "1",
+      "description": "Use dual-port register file."
+    },
+    "TWO_STAGE_SHIFT": {
+      "default": "1",
+      "description": "Two-stage shift operations."
+    },
+    "BARREL_SHIFTER": {
+      "default": "0",
+      "description": "Use barrel shifter."
+    },
+    "TWO_CYCLE_COMPARE": {
+      "default": "0",
+      "description": "Two-cycle compare."
+    },
+    "TWO_CYCLE_ALU": {
+      "default": "0",
+      "description": "Two-cycle ALU."
+    },
+    "COMPRESSED_ISA": {
+      "default": "0",
+      "description": "Enable RISC-V compressed ISA (RV32C)."
+    },
+    "CATCH_MISALIGN": {
+      "default": "1",
+      "description": "Catch misaligned memory access."
+    },
+    "CATCH_ILLINSN": {
+      "default": "1",
+      "description": "Catch illegal instructions."
+    },
+    "ENABLE_PCPI": {
+      "default": "0",
+      "description": "Enable Pico Co-Processor Interface."
+    },
+    "ENABLE_MUL": {
+      "default": "0",
+      "description": "Enable M extension multiply."
+    },
+    "ENABLE_FAST_MUL": {
+      "default": "0",
+      "description": "Enable fast multiply."
+    },
+    "ENABLE_DIV": {
+      "default": "0",
+      "description": "Enable M extension divide."
+    },
+    "ENABLE_IRQ": {
+      "default": "0",
+      "description": "Enable IRQ interface."
+    },
+    "ENABLE_IRQ_QREGS": {
+      "default": "1",
+      "description": "Enable IRQ quick-register access."
+    },
+    "ENABLE_IRQ_TIMER": {
+      "default": "1",
+      "description": "Enable internal IRQ timer."
+    },
+    "ENABLE_TRACE": {
+      "default": "0",
+      "description": "Enable trace interface."
+    },
+    "REGS_INIT_ZERO": {
+      "default": "0",
+      "description": "Initialize register file to zero."
+    },
+    "MASKED_IRQ": {
+      "default": "32'h00000000",
+      "description": "IRQ bit mask."
+    },
+    "LATCHED_IRQ": {
+      "default": "32'hffffffff",
+      "description": "IRQ latching mask."
+    },
+    "PROGADDR_RESET": {
+      "default": "32'h00000000",
+      "description": "Program counter value after reset."
+    },
+    "PROGADDR_IRQ": {
+      "default": "32'h00000010",
+      "description": "Interrupt entry program counter."
+    },
+    "STACKADDR": {
+      "default": "32'hffffffff",
+      "description": "Initial stack pointer."
+    }
+  },
+  "interfaces": {
+    "CLOCK_RESET": {
+      "type": "clock_reset",
+      "mode": "slave",
+      "description": "System clock and active-low reset."
+    },
+    "M_AXIL": {
+      "type": "axil",
+      "mode": "master",
+      "description": "AXI4-Lite master memory interface. Note: this core has no BRESP/RRESP ports, so it exposes 17 signals instead of the usual 19."
+    }
+  },
+  "ports": {
+    "clk": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "clock" },
+    "resetn": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "reset" },
+
+    "mem_axi_awvalid": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "AWVALID" },
+    "mem_axi_awready": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "AWREADY" },
+    "mem_axi_awaddr": { "direction": "output", "width": "32", "interface": "M_AXIL", "role": "AWADDR" },
+    "mem_axi_awprot": { "direction": "output", "width": "3", "interface": "M_AXIL", "role": "AWPROT" },
+    "mem_axi_wvalid": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "WVALID" },
+    "mem_axi_wready": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "WREADY" },
+    "mem_axi_wdata": { "direction": "output", "width": "32", "interface": "M_AXIL", "role": "WDATA" },
+    "mem_axi_wstrb": { "direction": "output", "width": "4", "interface": "M_AXIL", "role": "WSTRB" },
+    "mem_axi_bvalid": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "BVALID" },
+    "mem_axi_bready": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "BREADY" },
+    "mem_axi_arvalid": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "ARVALID" },
+    "mem_axi_arready": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "ARREADY" },
+    "mem_axi_araddr": { "direction": "output", "width": "32", "interface": "M_AXIL", "role": "ARADDR" },
+    "mem_axi_arprot": { "direction": "output", "width": "3", "interface": "M_AXIL", "role": "ARPROT" },
+    "mem_axi_rvalid": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "RVALID" },
+    "mem_axi_rready": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "RREADY" },
+    "mem_axi_rdata": { "direction": "input", "width": "32", "interface": "M_AXIL", "role": "RDATA" },
+
+    "trap": {
+      "direction": "output",
+      "width": "1",
+      "description": "Trap output, high when an illegal instruction is executed."
+    },
+    "irq": {
+      "direction": "input",
+      "width": "32",
+      "description": "Interrupt request inputs."
+    },
+    "eoi": {
+      "direction": "output",
+      "width": "32",
+      "description": "End-of-interrupt acknowledgements."
+    }
+  },
+  "files": {
+    "hdl": [
+      "third_party/core/picorv32.v"
+    ]
+  }
+}
