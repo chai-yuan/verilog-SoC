@@ -48,7 +48,8 @@ module axil2reg #(
     reg                      w_pending;
     reg                      ar_pending;
 
-    reg [    ADDR_WIDTH-1:0] latched_addr;
+    reg [    ADDR_WIDTH-1:0] latched_awaddr;
+    reg [    ADDR_WIDTH-1:0] latched_araddr;
     reg [    DATA_WIDTH-1:0] latched_wdata;
     reg [(DATA_WIDTH/8)-1:0] latched_wstrb;
 
@@ -69,14 +70,15 @@ module axil2reg #(
             aw_pending <= 1'b0;
             w_pending <= 1'b0;
             ar_pending <= 1'b0;
-            latched_addr <= 0;
+            latched_awaddr <= 0;
+            latched_araddr <= 0;
             latched_wdata <= 0;
             latched_wstrb <= 0;
             latched_rdata <= 0;
             latched_resp <= RESP_OKAY;
         end else begin
             if (s_axi_awready && s_axi_awvalid) begin
-                latched_addr <= s_axi_awaddr;
+                latched_awaddr <= s_axi_awaddr;
                 aw_pending   <= 1'b1;
             end
 
@@ -87,7 +89,7 @@ module axil2reg #(
             end
 
             if (s_axi_arready && s_axi_arvalid) begin
-                latched_addr <= s_axi_araddr;
+                latched_araddr <= s_axi_araddr;
                 ar_pending   <= 1'b1;
             end
 
@@ -137,7 +139,7 @@ module axil2reg #(
 
     assign m_valid = (state == ST_WRITE) || (state == ST_READ);
     assign m_write = (state == ST_WRITE);
-    assign m_addr = latched_addr;
+    assign m_addr = (state == ST_WRITE) ? latched_awaddr : latched_araddr;
     assign m_wdata = latched_wdata;
     assign m_wstrb = latched_wstrb;
 

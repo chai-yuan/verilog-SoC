@@ -83,15 +83,7 @@ module dma_reg_top #(
     reg write_error_reg;
     reg config_error_reg;
 
-    wire [7:0] register_addr = s_addr[7:0] - {{6{1'b0}}, s_addr[1:0]};
-    wire addr_in_range;
-    generate
-        if (ADDR_WIDTH > 8) begin : g_addr_range_check
-            assign addr_in_range = s_addr[ADDR_WIDTH-1:8] == {(ADDR_WIDTH-8){1'b0}};
-        end else begin : g_addr_range_always_ok
-            assign addr_in_range = 1'b1;
-        end
-    endgenerate
+    wire [7:0] register_addr = {s_addr[7:2], 2'b00};
 
     wire addr_mapped = register_addr == ADDR_READ_BEGIN  ||
                        register_addr == ADDR_READ_STEP   ||
@@ -103,7 +95,7 @@ module dma_reg_top #(
                        register_addr == ADDR_WRITE_SIZE  ||
                        register_addr == ADDR_CONTROL     ||
                        register_addr == ADDR_STATUS;
-    wire addr_valid = addr_in_range && addr_mapped;
+    wire addr_valid = addr_mapped;
     wire write_fire = s_valid && s_ready && s_write && addr_valid;
 
     assign s_ready = 1'b1;
