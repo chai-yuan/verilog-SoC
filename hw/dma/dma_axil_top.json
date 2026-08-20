@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "metadata": {
+    "name": "dma_axil_top",
+    "version": "1.0.0",
+    "author": "verilog-SoC",
+    "description": "Direct memory access engine with AXI4-Lite slave control port and AXI4-Lite master data port."
+  },
+  "parameters": {
+    "ADDR_WIDTH": {
+      "default": "32",
+      "description": "AXI address bus width."
+    },
+    "DATA_WIDTH": {
+      "default": "32",
+      "description": "AXI data bus width."
+    },
+    "FIFO_DEPTH": {
+      "default": "16",
+      "description": "Data FIFO depth in bytes."
+    }
+  },
+  "interfaces": {
+    "CLOCK_RESET": {
+      "type": "clock_reset",
+      "mode": "slave",
+      "description": "System clock and active-high reset."
+    },
+    "S_AXIL": {
+      "type": "axil",
+      "mode": "slave",
+      "description": "Upstream AXI4-Lite control/status connection."
+    },
+    "M_AXIL": {
+      "type": "axil",
+      "mode": "master",
+      "description": "Downstream AXI4-Lite data connection."
+    }
+  },
+  "ports": {
+    "clock": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "clock" },
+    "reset": { "direction": "input", "width": "1", "interface": "CLOCK_RESET", "role": "reset" },
+
+    "s_axi_awvalid": { "direction": "input", "width": "1", "interface": "S_AXIL", "role": "AWVALID" },
+    "s_axi_awready": { "direction": "output", "width": "1", "interface": "S_AXIL", "role": "AWREADY" },
+    "s_axi_awaddr": { "direction": "input", "width": "ADDR_WIDTH", "interface": "S_AXIL", "role": "AWADDR" },
+    "s_axi_awprot": { "direction": "input", "width": "3", "interface": "S_AXIL", "role": "AWPROT" },
+    "s_axi_wvalid": { "direction": "input", "width": "1", "interface": "S_AXIL", "role": "WVALID" },
+    "s_axi_wready": { "direction": "output", "width": "1", "interface": "S_AXIL", "role": "WREADY" },
+    "s_axi_wdata": { "direction": "input", "width": "DATA_WIDTH", "interface": "S_AXIL", "role": "WDATA" },
+    "s_axi_wstrb": { "direction": "input", "width": "DATA_WIDTH/8", "interface": "S_AXIL", "role": "WSTRB" },
+    "s_axi_bvalid": { "direction": "output", "width": "1", "interface": "S_AXIL", "role": "BVALID" },
+    "s_axi_bready": { "direction": "input", "width": "1", "interface": "S_AXIL", "role": "BREADY" },
+    "s_axi_bresp": { "direction": "output", "width": "2", "interface": "S_AXIL", "role": "BRESP" },
+    "s_axi_arvalid": { "direction": "input", "width": "1", "interface": "S_AXIL", "role": "ARVALID" },
+    "s_axi_arready": { "direction": "output", "width": "1", "interface": "S_AXIL", "role": "ARREADY" },
+    "s_axi_araddr": { "direction": "input", "width": "ADDR_WIDTH", "interface": "S_AXIL", "role": "ARADDR" },
+    "s_axi_arprot": { "direction": "input", "width": "3", "interface": "S_AXIL", "role": "ARPROT" },
+    "s_axi_rvalid": { "direction": "output", "width": "1", "interface": "S_AXIL", "role": "RVALID" },
+    "s_axi_rready": { "direction": "input", "width": "1", "interface": "S_AXIL", "role": "RREADY" },
+    "s_axi_rdata": { "direction": "output", "width": "DATA_WIDTH", "interface": "S_AXIL", "role": "RDATA" },
+    "s_axi_rresp": { "direction": "output", "width": "2", "interface": "S_AXIL", "role": "RRESP" },
+
+    "m_axil_awaddr": { "direction": "output", "width": "ADDR_WIDTH", "interface": "M_AXIL", "role": "AWADDR" },
+    "m_axil_awprot": { "direction": "output", "width": "3", "interface": "M_AXIL", "role": "AWPROT" },
+    "m_axil_awvalid": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "AWVALID" },
+    "m_axil_awready": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "AWREADY" },
+    "m_axil_wdata": { "direction": "output", "width": "DATA_WIDTH", "interface": "M_AXIL", "role": "WDATA" },
+    "m_axil_wstrb": { "direction": "output", "width": "DATA_WIDTH/8", "interface": "M_AXIL", "role": "WSTRB" },
+    "m_axil_wvalid": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "WVALID" },
+    "m_axil_wready": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "WREADY" },
+    "m_axil_bresp": { "direction": "input", "width": "2", "interface": "M_AXIL", "role": "BRESP" },
+    "m_axil_bvalid": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "BVALID" },
+    "m_axil_bready": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "BREADY" },
+    "m_axil_araddr": { "direction": "output", "width": "ADDR_WIDTH", "interface": "M_AXIL", "role": "ARADDR" },
+    "m_axil_arprot": { "direction": "output", "width": "3", "interface": "M_AXIL", "role": "ARPROT" },
+    "m_axil_arvalid": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "ARVALID" },
+    "m_axil_arready": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "ARREADY" },
+    "m_axil_rdata": { "direction": "input", "width": "DATA_WIDTH", "interface": "M_AXIL", "role": "RDATA" },
+    "m_axil_rresp": { "direction": "input", "width": "2", "interface": "M_AXIL", "role": "RRESP" },
+    "m_axil_rvalid": { "direction": "input", "width": "1", "interface": "M_AXIL", "role": "RVALID" },
+    "m_axil_rready": { "direction": "output", "width": "1", "interface": "M_AXIL", "role": "RREADY" },
+
+    "interrupt": {
+      "direction": "output",
+      "width": "1",
+      "description": "DMA interrupt output."
+    }
+  },
+  "files": {
+    "hdl": [
+      "hw/dma/rtl/dma_axil_top.v",
+      "hw/dma/rtl/dma_reg_top.v",
+      "hw/axil/rtl/axil2reg.v",
+      "hw/axil/rtl/axil_dma_rd.v",
+      "hw/axil/rtl/axil_dma_wr.v",
+      "hw/axis/rtl/axis_fifo.v"
+    ]
+  }
+}
